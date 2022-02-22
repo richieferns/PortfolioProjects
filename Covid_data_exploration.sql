@@ -1,8 +1,19 @@
+/*
+Covid 19 Data Exploration 
+Skills used: Joins, CTE's, Temp Tables, Windows Functions, Aggregate Functions, Creating Views, Converting Data Types
+*/
+
 select *
 from coviddeaths
-Where location ='world'-- total_cases = 0
-order by location,date
+Where continent <> ''
+order by 3,4
 
+-- Select Data that we are going to be starting with
+
+Select Location, date, total_cases, new_cases, total_deaths, population
+From PortfolioProject..CovidDeaths
+Where continent <> '' 
+order by 1,2
 
 
 --looking at Total Cases vs Total Deaths
@@ -11,7 +22,7 @@ order by location,date
 select location,date, total_cases, total_deaths, 
 case when total_cases = 0 then NULL else (total_deaths/total_cases) * 100 end  as DeathPercentage
 from coviddeaths
-where continent <> ''--location like '%states%'
+where continent <> '' and location like '%india%'
 order by location,date
 
 --looking at Total Cases vs Population
@@ -20,7 +31,7 @@ order by location,date
 select location,date, population, total_cases,
 case when population = 0 then NULL else (total_cases/population) * 100 end  as PercentOfPopulationInfected
 from coviddeaths
-where continent <> '' --location like '%states%'
+where continent <> '' 
 order by location,date
 
 --looking at countries with highest Infection rate compared to population
@@ -28,7 +39,7 @@ order by location,date
 select location, population, max(total_cases) as HighestInfectionCount
 ,case when population = 0 then NULL else (max(total_cases)/population) * 100 end as PercentOfPopulationInfected
 from coviddeaths
-where <> ''--where location like '%states%'
+where continent <> ''
 group by location,population
 order by PercentOfPopulationInfected desc
 
