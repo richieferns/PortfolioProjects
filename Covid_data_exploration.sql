@@ -3,11 +3,6 @@ Covid 19 Data Exploration
 Skills used: Joins, CTE's, Temp Tables, Windows Functions, Aggregate Functions, Creating Views, Converting Data Types
 */
 
-select *
-from coviddeaths
-Where continent <> ''
-order by 3,4
-
 -- Select Data that we are going to be starting with
 
 Select Location, date, total_cases, new_cases, total_deaths, population
@@ -20,7 +15,7 @@ order by 1,2
 --shows the likelyhood dying if you contract covid in your country
 
 select location,date, total_cases, total_deaths, 
-case when total_cases = 0 then NULL else (total_deaths/total_cases) * 100 end  as DeathPercentage
+(total_deaths/total_cases) * 100 as DeathPercentage
 from coviddeaths
 where continent <> '' and location like '%india%'
 order by location,date
@@ -28,8 +23,9 @@ order by location,date
 --looking at Total Cases vs Population
 --shows what percentage of Population got covid
 
+
 select location,date, population, total_cases,
-case when population = 0 then NULL else (total_cases/population) * 100 end  as PercentOfPopulationInfected
+(total_cases/population) * 100 as PercentOfPopulationInfected
 from coviddeaths
 where continent <> '' 
 order by location,date
@@ -37,7 +33,7 @@ order by location,date
 --looking at countries with highest Infection rate compared to population
 
 select location, population, max(total_cases) as HighestInfectionCount
-,case when population = 0 then NULL else (max(total_cases)/population) * 100 end as PercentOfPopulationInfected
+,(max(total_cases)/population) * 100 as PercentOfPopulationInfected
 from coviddeaths
 where continent <> ''
 group by location,population
@@ -66,7 +62,7 @@ order by TotalDeathCount desc
 select date
 	,SUM(new_cases) as total_cases
 	,SUM(new_deaths) as total_deaths
-	,case when SUM(new_cases) = 0 then NULL else SUM(new_deaths)/SUM(new_cases) * 100 end as DeathPercentage
+	,SUM(new_deaths)/SUM(new_cases) * 100 as DeathPercentage
 from coviddeaths
 where continent <> ''--location like '%states%'
 group by date
@@ -117,6 +113,7 @@ join CovidVaccinations vac
 where dea.continent <> ''
 --order by 2,3
 
+--selecting records from view
 select * ,case when population = 0 then null else (RollingPeopleVaccinated / population) * 100 end as PercentPopulationVaccinated
 from vPercentPopulationVaccinated
 order by 2,3
